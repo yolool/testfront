@@ -1,0 +1,45 @@
+<div class="dash-main">
+
+    <h1>Bienvenue you are login as a {{type}} </h1>
+     
+   <div class="collapse-div" >
+    <div class="expend">
+        <h3 class="name">Engagement de confidentialité</h3>
+        @if (showexpand) {
+        <button class="collapse-btn" (click)="collapse()">
+           <img  class="img-arrow" src="../../assets/img/icons8-collapse-arrow-100.png" >
+           </button>
+        }
+         @if (showcollapse) {
+        <button class="collapse-btn" (click)="extand()" >   
+             <img  class="img-arrow" src="../../assets/img/icons8-expand-arrow-100.png" >
+           
+        </button>
+    }
+    </div>
+    @if(showexpand){
+    <div class="collapse">
+       <h4 class="statut">Statut: </h4>
+       @if(!sign){
+       <h4 class="nosign"> En attente de signature </h4>
+       }
+       @if(sign){
+       <h4 class="sign">Document déjà signée</h4>
+       }
+        @if(!sign){
+            @if (type === 'AutrePersonelTE') {
+              <div class="signeture"><a routerLink="/Engagment" [queryParams]="{type: 'AutrePersonelTE'}"><Button class="gosign">signe</Button></a></div>
+            }
+             @if (type === 'PersonelLaboTE') {
+              <div class="signeture"><a routerLink="/EngagementImp"><Button class="gosign">signe</Button></a></div>
+            } 
+            @if (type === 'guest') {
+              <div class="signeture"><a routerLink="/Engagment" [queryParams]="{type: 'guest'}"><Button class="gosign">signe</Button></a></div>
+            }
+       
+        }
+    </div>}
+   </div>
+</div>
+
+

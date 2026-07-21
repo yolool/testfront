@@ -1,0 +1,39 @@
+
+<div class="role-main">
+<h1>Choisissez votre profil</h1>
+
+<form [formGroup]="radioGroupe" class="form-main" (submit)="OnSubmit()">
+    <tr>
+     <td><input type="radio" id="role" name="role" value="PersonelTE"  formControlName="role" (change)="verifierTE()"   ></td>
+     <td><h2><label>Personnel TE</label></h2></td>
+    </tr>
+
+     @if (showoption) {
+        <form [formGroup]="radioGroupe" class="form-sub">
+      <tr>
+        <td><input type="radio" id="role" name="role" value="PersonelLaboTE" formControlName="role"  ></td>
+        <td><label><h2>Personnel laboratoire TE</h2></label></td>
+      </tr>
+      <tr>
+        <td><input type="radio" id="role" name="role" value="AutrePersonelTE" formControlName="role"  ></td>
+        <td><label><h2>Autre Personnel TE</h2></label></td>
+    </tr></form>
+}
+   
+    <tr>
+        <td><input type="radio" id="role" name="role" value="PersonelExtern" formControlName="role" (change)="verifierTE()"></td>
+        <td><label><h2>Personnel Externe</h2></label></td>
+    </tr>
+
+     <button type="submit" class="next">
+      <span class="circle" aria-hidden="true">
+      <span class="icon arrow"></span>
+      </span>
+      <span class="button-text">Next</span>
+      </button>
+</form>
+
+
+
+
+</div>

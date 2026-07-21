@@ -1,0 +1,74 @@
+.dash-main {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+   
+}
+.expend{
+    display: flex;
+    width: 453px; 
+    height: 73px; 
+    background-color: #d9d9d9 ;
+    margin-top: 50px;
+    margin-left: 10px
+
+}
+
+.name{
+    margin-left: 50px;
+    padding-top:5px ;
+
+}
+
+.collapse-btn{
+    background-color: #d9d9d9;
+    border: 0px;
+    margin-left: 50px;
+}
+.img-arrow {
+    width: 50px;
+    height: 50px;
+}
+
+.collapse-div{
+    display: grid;
+    
+}
+.collapse{
+    display: flex;
+    width: 453px; 
+    height: 150px; 
+    background-color: #d9d9d9 ;
+    margin-left: 10px
+    
+}
+
+.statut{
+    margin-left: 45px ;
+    padding-top:20px
+}
+.nosign{
+    padding-top:20px;
+    margin-left:100px ;
+    color: red;
+}
+
+.signeture{
+    padding-top: 100px;
+    margin-left: 0px;
+}
+.gosign{
+    padding: 7px 20px 7px 20px;
+    background-color: #0066A1;
+    border: 0px;
+    color: white;
+    
+}
+.gosign:hover {
+  background-color: #3DB7E4;
+}
+.sign{
+    padding-top:20px;
+    margin-left:100px ;
+    color: green;
+}

@@ -1,0 +1,37 @@
+<div class="body">
+<div class="signup-card">
+    <div class="avatar-container">
+      <svg class="avatar-icon" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="50" fill="#e2e2e2" />
+        <circle cx="50" cy="38" r="18" fill="#acacac" />
+        <path d="M 22 80 C 22 62, 35 55, 50 55 C 65 55, 78 62, 78 80 Z" fill="#acacac" />
+      </svg>
+    </div>
+
+    <form [formGroup]="form" class="signup-form" (submit)="OnSubmit()" >
+      <div class="form-group">
+        <label for="Idte">ID TE</label>
+        @if(form.get('idte')?.invalid && form.get('idte')?.touched){
+            <small class="error">*champ obligatoire.</small>}
+        <input type="text"  name="idte" formControlName="idte"  required>
+      </div>
+       @if (showdep) {
+      <div class="form-group">
+        <label for="dep">Département</label>
+         @if(form.get('dep')?.invalid && form.get('dep')?.touched){
+            <small class="error">*champ obligatoire.</small>}
+        <select name="dep" formControlName="dep">
+            <option value="">select your departement</option>
+            <option value="dep1">dep1</option>
+            <option value="dep2">dep2</option>
+            <option value="dep3">dep3</option>
+            <option value="dep4">dep4</option>
+        </select>
+      </div>}
+
+     
+
+      <button type="submit" class="btn-submit">Sign Up</button>
+    </form>
+  </div>
+  </div>
