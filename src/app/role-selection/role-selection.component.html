@@ -1,5 +1,11 @@
 
 <div class="role-main">
+
+  @if(this.statut === 'signed'){
+  <div>
+     <h5>you  succeffuly signed the document</h5>  
+  </div>}
+
 <h1>Choisissez votre profil</h1>
 
 <form [formGroup]="radioGroupe" class="form-main" (submit)="OnSubmit()">

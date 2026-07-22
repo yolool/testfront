@@ -16,9 +16,7 @@ export class DashboardComponent implements OnInit {
   sign=false
    ngOnInit(): void {
        this.route.queryParams.subscribe(params => {
-        if(params['type'] === 'guest'){
-          this.type= 'guest'
-        }else if(params['type'] === 'PersonelLaboTE'){
+        if(params['type'] === 'PersonelLaboTE'){
           this.type = 'PersonelLaboTE'
         }else if(params['type'] === 'AutrePersonelTE'){
           this.type = 'AutrePersonelTE'

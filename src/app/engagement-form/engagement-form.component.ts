@@ -3,9 +3,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import SignaturePad from 'signature_pad';
-import { DatePipe } from '@angular/common';
 import {  Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { EngagementService } from '../service/engagement.service';
 @Component({
   selector: 'app-engagement-form',
   imports: [ReactiveFormsModule ],
@@ -15,7 +14,7 @@ import { HttpClient } from '@angular/common/http';
 export class EngagementFormComponent {
 @ViewChild('signatureCanvas')
   canvas!: ElementRef<HTMLCanvasElement>;
-
+  type : any
   router = inject(Router)
 signaturePad!: SignaturePad;
  showbtn=false
@@ -23,8 +22,20 @@ signaturePad!: SignaturePad;
  date:Date = new Date
  signture=false
 
+ ngOnInit(){
+  this.type = sessionStorage.getItem('type')
+  console.log(this.type)
+ 
+   if(this.type !== 'guest'){
+       this.form.get('teid')?.setValidators([Validators.required])
+      this.form.get('teid')?.updateValueAndValidity()
+      
+   }   
 
-  constructor(private fb: FormBuilder , private http:HttpClient){
+ }
+
+
+  constructor(private fb: FormBuilder , private engagementServ:EngagementService){
     
     this.form = this.fb.group({
       check:[false],
@@ -36,7 +47,9 @@ signaturePad!: SignaturePad;
       date:[{value: this.date.getDate() + '/' + '0'+(this.date.getMonth()+1) + '/' + this.date.getFullYear(),disabled:true}]
 
     });
-         
+   
+  
+       
     
   }
  
@@ -49,92 +62,65 @@ signaturePad!: SignaturePad;
     }
   }
 
- generatePdf(){
-
-    const content = document.getElementById('pdfContent');
-
-    const buttons = document.querySelectorAll('.no-print');
-
+ async generatePdf(): Promise<void> {
    
-     if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return ;
-    
-  }
+   if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      
+      return;
+    }
 
-  if (this.signaturePad.isEmpty()) {
-    this.signture=true
-    return ;
-  }else{
-     this.signture=false
-  }
-    buttons.forEach(btn=>{
-        (btn as HTMLElement).style.display='none';
-    });
-
-
-    html2canvas(content!, {
-        scale:2
-    }).then(canvas=>{
-
-
-        const pdf = new jsPDF('p','mm','a4');
-
-        const img = canvas.toDataURL('image/png');
-
-
-        pdf.addImage(
-            img,
-            'PNG',
-            0,
-            0,
-            210,
-            297
-        );
-
-
-        //pdf.save('Engagement.pdf');
-         this.router.navigate(['/Dashboard'],{
-              queryParams:{type: 'guest' ,msg:'signed'}
-            })
-        const blo =pdf.output('blob')
-        const formData = new FormData();
-        formData.append('pdf', blo, 'Engagement.pdf');
-        this.http.post(
-            "http://localhost:3000/send-email",
-            formData
-        ).subscribe({
-
-            next: () => {
-
-                console.log("Email envoyé avec succès.");
-
-            },
-
-            error: err => {
-
-                console.log(err);
-
-            }
-
-        });
-
-    });
-
-
-
-        buttons.forEach(btn=>{
-            (btn as HTMLElement).style.display='block';
-        
-          
-        });
-
-
+    if (this.signaturePad.isEmpty()) {
+      this.signture = true;
+      return;
+    }
+   
   
 
-}
+    try {
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      const content = document.getElementById('pdfContent');
+      if (!content) return;
+
+      const canvas = await html2canvas(content, {
+        scale: 2,
+        useCORS: true,
+        logging: false
+      });
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgData = canvas.toDataURL('image/png');
+      pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+
+      const pdfBlob = pdf.output('blob');
+      const pdfFile = new File([pdfBlob], 'Engagement.pdf', { type: 'application/pdf' });
+      
+      const subject = `Engagement de confidentialité - ${this.form.value.name}`;
+      
+
+      this.engagementServ.uploadEngagement(pdfFile, subject  ).subscribe({
+        next: (response) => {
+          if(this.type === 'guest'){
+          this.router.navigate(['/']);
+          sessionStorage.setItem('msg' , response.statut)}
+        }
+        // the other  
+        
+        ,
+        error: (err) => {
+          console.error('Failed to upload PDF engagement:', err);
+        }
+      });
+
+    } catch (error) {
+      console.error('Error rendering PDF:', error);
+    }
+  }
+
  ngAfterViewInit() {
 
+    
     setTimeout(() => {
 
       const canvas = this.canvas.nativeElement;
@@ -143,6 +129,7 @@ signaturePad!: SignaturePad;
       canvas.height = canvas.offsetHeight;
 
       this.signaturePad = new SignaturePad(canvas);
+      
 
       
     }, 100);

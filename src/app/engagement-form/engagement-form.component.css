@@ -9,7 +9,7 @@ form{
     min-height:297mm;
 
     margin:auto;
-
+    margin-bottom: 30px;
     background:white;
 
     padding:10mm;
@@ -251,4 +251,9 @@ select{
 }
 span{
     color: #006FC0;
+}
+
+.h1{
+    align-content: center;
+    justify-items: center;
 }

@@ -9,12 +9,26 @@ import {Router} from '@angular/router';
   styleUrl: './role-selection.component.css'
 })
 export class RoleSelectionComponent {
+  statut:any
   private router = inject(Router);
   showoption : any
    fb:FormBuilder = new FormBuilder
    radioGroupe = this.fb.group({
     role : [''] 
    })
+
+   ngOnInit() {
+  this.statut = sessionStorage.getItem('msg');
+
+  if (this.statut) {
+    sessionStorage.removeItem('msg');
+
+       setTimeout(() => {
+      this.statut = '';
+         }, 5000);
+     }
+    }
+
    verifierTE(){
     if(this.radioGroupe.get('role')?.value  === 'PersonelTE' ){
        this.showoption = true
@@ -25,9 +39,8 @@ export class RoleSelectionComponent {
      
       OnSubmit(){
           if (this.radioGroupe.get('role')?.value  === 'PersonelExtern'){
-            this.router.navigate(['/Dashboard'],{
-              queryParams:{type: 'guest'}
-            })
+            this.router.navigate(['/Engagment'])
+            sessionStorage.setItem('type','guest')
 
           }else if(this.radioGroupe.get('role')?.value  === 'PersonelLaboTE'){
                 this.router.navigate(['/login'],{

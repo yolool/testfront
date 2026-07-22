@@ -22,21 +22,7 @@ export class AuthformComponent {
    
 
   ngOnInit(){
-    this.route.queryParams.subscribe(params=>{
-       if(params['as']==='AutrePersonelTE'){
-        this.showdep=true
-        this.form.get('dep')?.setValidators(Validators.required);
-
-       }else if(params['as']==='PersonelLaboTE'){
-         this.showdep=false
-       }else{
-         this.router.navigate(['/404'])
-       }
-    })
-
-    
-
-     this.form.get('dep')?.updateValueAndValidity(); 
+   
   
   }
   OnSubmit(){

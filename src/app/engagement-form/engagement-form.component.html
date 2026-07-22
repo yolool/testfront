@@ -1,5 +1,9 @@
 <form [formGroup]="form" >
 
+    @if (this.type === 'guest') {
+        <div class="h1"><h1>Signez le document ci-dessous</h1></div>
+    }
+
 <div id="pdfContent" class="page">
 
 
@@ -82,7 +86,8 @@
             <small class="error">*champ est obligatoire.</small>}    
             
            <span> muni(e) de TE ID  </span>
-
+             @if(form.get('teid')?.invalid && form.get('teid')?.touched){
+            <small class="error">*champ est obligatoire.</small>}   
             <input 
                 type="text"
                 formControlName="teid">
