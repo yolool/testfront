@@ -19,6 +19,8 @@ export class RoleSelectionComponent {
 
    ngOnInit() {
   this.statut = sessionStorage.getItem('msg');
+  sessionStorage.clear()
+    
 
   if (this.statut) {
     sessionStorage.removeItem('msg');
@@ -43,13 +45,12 @@ export class RoleSelectionComponent {
             sessionStorage.setItem('type','guest')
 
           }else if(this.radioGroupe.get('role')?.value  === 'PersonelLaboTE'){
-                this.router.navigate(['/login'],{
-              queryParams:{as: 'PersonelLaboTE'}
-            })
+                this.router.navigate(['/login'])
+                sessionStorage.setItem('as','PersonelLaboTE')
+                
           }else if(this.radioGroupe.get('role')?.value  === 'AutrePersonelTE'){
-                  this.router.navigate(['/login'],{
-              queryParams:{as: 'AutrePersonelTE'}
-            })
+                  this.router.navigate(['/login'])
+                  sessionStorage.setItem('as','AutrePersonelTE')
           }
 
       }

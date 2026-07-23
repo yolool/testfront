@@ -27,4 +27,9 @@ export class EngagementService {
     return this.http.post<EngagementDto>(`${this.apiUrl}/upload`,formdata)
     
   }
+  
+  getStatut(id:string){
+    return this.http.get<EngagementDto>(`${this.apiUrl}/perso/${id}`)
+  }
+
 }

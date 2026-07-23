@@ -12,7 +12,7 @@ import { RoleSelectionComponent } from './role-selection/role-selection.componen
 })
 export class AppComponent {
   title = 'proj_stage_confidentieliter';
-  showitem  = false
+  
   
 
  

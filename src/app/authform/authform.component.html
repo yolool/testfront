@@ -10,10 +10,10 @@
 
     <form [formGroup]="form" class="signup-form" (submit)="OnSubmit()" >
       <div class="form-group">
-        <label for="Idte">ID TE</label>
-        @if(form.get('idte')?.invalid && form.get('idte')?.touched){
+        <label for="idPersonnel">ID TE</label>
+        @if(form.get('idPersonnel')?.invalid && form.get('idPersonnel')?.touched){
             <small class="error">*champ obligatoire.</small>}
-        <input type="text"  name="idte" formControlName="idte"  required>
+        <input type="text"  name="idPersonnel" formControlName="idPersonnel"  required>
       </div>
        @if (showdep) {
       <div class="form-group">
@@ -21,11 +21,8 @@
          @if(form.get('dep')?.invalid && form.get('dep')?.touched){
             <small class="error">*champ obligatoire.</small>}
         <select name="dep" formControlName="dep">
-            <option value="">select your departement</option>
-            <option value="dep1">dep1</option>
-            <option value="dep2">dep2</option>
-            <option value="dep3">dep3</option>
-            <option value="dep4">dep4</option>
+            @for (item of deps; track $index) {
+            <option value={{item.dep}}>{{item.dep}}</option>}
         </select>
       </div>}
 

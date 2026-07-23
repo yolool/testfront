@@ -1,7 +1,7 @@
-// auth.service.ts
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap,of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 export interface LoginDTO {
   idPersonnel: string;
@@ -18,8 +18,8 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  login(credentials: LoginDTO): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
+  login(credentials: LoginDTO): Observable<any> { 
+    return this.http.post(`${this.apiUrl}/login`, credentials,{withCredentials:true}).pipe(
       tap(() => {
         this.isAuthenticated.set(true);
       })
@@ -27,10 +27,25 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
+    return this.http.post(`http://localhost:8080/logout`, {}).pipe(
       tap(() => {
         this.isAuthenticated.set(false);
       })
     );
   }
+  checkSession(): Observable<boolean> {
+  return this.http.get(
+    `${this.apiUrl}/me`,
+    {
+      withCredentials: true
+    }
+  ).pipe(
+    tap(() => this.isAuthenticated.set(true)),
+    map(() => true),
+    catchError(() => {
+      this.isAuthenticated.set(false);
+      return of(false);
+    })
+  );
+}
 }

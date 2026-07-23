@@ -7,12 +7,13 @@ import { AuthformComponent } from './authform/authform.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { EngagementImpartialityComponent } from './engagement-impartiality/engagement-impartiality.component';
 import { authGuard } from './auth.guard';
+import { loginGuard } from './login.guard';
 
 export const routes: Routes = [
    {path : 'Dashboard' , component: DashboardComponent ,canActivate:[authGuard]},
-    {path : '' , component:RoleSelectionComponent },
+    {path : '' , component:RoleSelectionComponent , canActivate:[loginGuard]},
     {path : 'Engagment' , component:EngagementFormComponent },
-    {path:'login' ,component:AuthformComponent},
+    {path:'login' ,component:AuthformComponent , canActivate:[loginGuard]},
     {path:'404' , component:NotFoundComponent},
     {path:'EngagementImp' , component:EngagementImpartialityComponent}
 ];

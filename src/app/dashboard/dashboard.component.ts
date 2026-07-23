@@ -1,5 +1,8 @@
 import { Component, inject, OnInit, } from '@angular/core';
 import { ActivatedRoute, RouterLink,Router } from '@angular/router';
+import { PersonnelDto, PersonnelService } from '../service/personnel.service';
+import { error } from 'console';
+import { EngagementDto, EngagementService } from '../service/engagement.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,31 +10,46 @@ import { ActivatedRoute, RouterLink,Router } from '@angular/router';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent  {
   router = inject(Router)
-  constructor(private route : ActivatedRoute){}
+  constructor(private route : ActivatedRoute , private personnelserv:PersonnelService ,private engagementserv:EngagementService){}
   type=''
   showexpand = false
   showcollapse = true
   sign=false
-   ngOnInit(): void {
-       this.route.queryParams.subscribe(params => {
-        if(params['type'] === 'PersonelLaboTE'){
-          this.type = 'PersonelLaboTE'
-        }else if(params['type'] === 'AutrePersonelTE'){
-          this.type = 'AutrePersonelTE'
+  personnel:PersonnelDto = {
+    IdPersonnel:'',
+    Name:'',
+    Department: ''
+     
+  }
+ 
+
+  ngOnInit(){
+    const id =sessionStorage.getItem('id') || ''
+    this.personnelserv.getPersonnel(id).subscribe({
+      next : (data) =>{
+        this.personnel = data
+      },
+      error : (err) =>{
+        return
+      }
+    })
+    this.engagementserv.getStatut(id).subscribe({
+      next : (data)=>{
+          if(data['statut'] === 'signed'){
+          this.sign = true
         }else{
-          this.router.navigate(['/404'])
-
+          this.sign = false
         }
-       if(params['msg'] === 'signed'){
-        this.sign = true
-
-       }
-      
-     })
-   }
+      },
+      error : (err) =>{
+            return
+      }
+    })
    
+    
+  }
    collapse(){
     this.showcollapse=true
      this.showexpand = false
@@ -43,4 +61,4 @@ export class DashboardComponent implements OnInit {
    }
    
 
-}
+  }
