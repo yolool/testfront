@@ -1,10 +1,11 @@
-import { Component, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import SignaturePad from 'signature_pad';
 import {  Router } from '@angular/router';
 import { EngagementService } from '../service/engagement.service';
+import { HttpErrorResponse } from '@angular/common/http';
 @Component({
   selector: 'app-engagement-form',
   imports: [ReactiveFormsModule ],
@@ -21,11 +22,13 @@ signaturePad!: SignaturePad;
  form: FormGroup;
  date:Date = new Date
  signture=false
+ errorMessage = signal<string | null>(null);
+ isLoading = signal<boolean>(false);
+ successMessage = signal<string | null>(null);
 
 
  ngOnInit(){
   this.type = sessionStorage.getItem('type')
-  console.log(this.type)
  
    if(this.type !== 'guest'){
        this.form.get('teid')?.setValidators([Validators.required])
@@ -34,7 +37,6 @@ signaturePad!: SignaturePad;
    }   
 
  }
-
 
   constructor(private fb: FormBuilder , private engagementServ:EngagementService){
     
@@ -48,12 +50,8 @@ signaturePad!: SignaturePad;
       date:[{value: this.date.getDate() + '/' + '0'+(this.date.getMonth()+1) + '/' + this.date.getFullYear(),disabled:true}]
 
     });
-   
   
-       
-    
   }
- 
   
     
   verfiecheck(){
@@ -64,18 +62,22 @@ signaturePad!: SignaturePad;
     }
   }
 
+  private getErrorMessage(err: HttpErrorResponse): string {
+    return 'ID personnel not found';
+  }
+
  async generatePdf(): Promise<void> {
+   this.form.get('check')?.disable()
+   this.errorMessage.set(null);
+   this.successMessage.set(null);
    
    if (this.signaturePad.isEmpty() || this.form.invalid) {
        this.signture = true;
        this.form.markAllAsTouched();
       return ;
     }
-  
 
-   
-   
-  
+    this.isLoading.set(true);
 
     try {
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -102,47 +104,40 @@ signaturePad!: SignaturePad;
          id = this.form.get('teid')?.value
       }
 
-      this.engagementServ.uploadEngagement(pdfFile, subject, id  ).subscribe({
+      this.engagementServ.uploadEngagement(pdfFile, subject, id).subscribe({
         next: (response) => {
-          if(this.type === 'guest'){
-          this.router.navigate(['/']);
-          sessionStorage.setItem('msg' , response.statut)
-          }else{
-            this.router.navigate(['/Dashboard'])
-          }
-        }
-          
-        
-        ,
-        error: (err) => {
-          console.error('Failed to upload PDF engagement:', err);
+          this.isLoading.set(false);
+          this.successMessage.set('Document submitted successfully!');
+          setTimeout(() => {
+            if(this.type === 'guest'){
+              this.router.navigate(['/']);
+              sessionStorage.setItem('msg' , response.statut)
+            }else{
+              this.router.navigate(['/Dashboard'])
+            }
+          }, 1500);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.form.get('check')?.enable()
+          this.isLoading.set(false);
+          this.errorMessage.set(this.getErrorMessage(err));
         }
       });
 
     } catch (error) {
-      console.error('Error rendering PDF:', error);
+      this.isLoading.set(false);
+      this.errorMessage.set('Failed to generate PDF. Please try again.');
     }
   }
 
  ngAfterViewInit() {
-
-    
     setTimeout(() => {
-
       const canvas = this.canvas.nativeElement;
-
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
-
       this.signaturePad = new SignaturePad(canvas);
-      
-
-      
     }, 100);
-
   }
-
-
 
 clearSignature() {
   this.signaturePad.clear();

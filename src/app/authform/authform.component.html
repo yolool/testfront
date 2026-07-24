@@ -9,26 +9,37 @@
     </div>
 
     <form [formGroup]="form" class="signup-form" (submit)="OnSubmit()" >
+      @if (errorMessage()) {
+        <div class="error-banner">
+          <span class="error-icon">⚠</span>
+          {{ errorMessage() }}
+        </div>
+      }
+
       <div class="form-group">
         <label for="idPersonnel">ID TE</label>
         @if(form.get('idPersonnel')?.invalid && form.get('idPersonnel')?.touched){
-            <small class="error">*champ obligatoire.</small>}
-        <input type="text"  name="idPersonnel" formControlName="idPersonnel"  required>
+            <small class="field-error">*champ obligatoire.</small>}
+        <input type="text"  name="idPersonnel" formControlName="idPersonnel"  required [class.input-error]="errorMessage() !== null">
       </div>
        @if (showdep) {
       <div class="form-group">
         <label for="dep">Département</label>
          @if(form.get('dep')?.invalid && form.get('dep')?.touched){
-            <small class="error">*champ obligatoire.</small>}
-        <select name="dep" formControlName="dep">
+            <small class="field-error">*champ obligatoire.</small>}
+        <select name="dep" formControlName="dep" [class.input-error]="errorMessage() !== null">
             @for (item of deps; track $index) {
             <option value={{item.dep}}>{{item.dep}}</option>}
         </select>
       </div>}
 
-     
-
-      <button type="submit" class="btn-submit">Sign Up</button>
+      <button type="submit" class="btn-submit" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <span class="spinner"></span> Connexion...
+        } @else {
+          Sign Up
+        }
+      </button>
     </form>
   </div>
   </div>

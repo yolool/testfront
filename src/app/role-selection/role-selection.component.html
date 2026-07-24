@@ -1,35 +1,34 @@
-
 <div class="role-main">
 
-  @if(this.statut === 'signed'){
+  @if(this.statut === 'signed' ){
   <div class="success">
-     <h5>you  succeffuly signed the document</h5>  
+     <h5>You successfully signed the document</h5>  
   </div>}
 
 <h1>Choisissez votre profil</h1>
 
 <form [formGroup]="radioGroupe" class="form-main" (submit)="OnSubmit()">
-    <tr>
-     <td><input type="radio" id="role" name="role" value="PersonelTE"  formControlName="role" (change)="verifierTE()"   ></td>
-     <td><h2><label>Personnel TE</label></h2></td>
-    </tr>
+    <div class="radio-row">
+     <input type="radio" id="role-personel" name="role" value="PersonelTE"  formControlName="role" (change)="verifierTE()">
+     <label for="role-personel"><h2>Personnel TE</h2></label>
+    </div>
 
      @if (showoption) {
-        <form [formGroup]="radioGroupe" class="form-sub">
-      <tr>
-        <td><input type="radio" id="role" name="role" value="PersonelLaboTE" formControlName="role"  ></td>
-        <td><label><h2>Personnel laboratoire TE</h2></label></td>
-      </tr>
-      <tr>
-        <td><input type="radio" id="role" name="role" value="AutrePersonelTE" formControlName="role"  ></td>
-        <td><label><h2>Autre Personnel TE</h2></label></td>
-    </tr></form>
+        <div class="form-sub">
+      <div class="radio-row">
+        <input type="radio" id="role-labo" name="role" value="PersonelLaboTE" formControlName="role">
+        <label for="role-labo"><h2>Personnel laboratoire TE</h2></label>
+      </div>
+      <div class="radio-row">
+        <input type="radio" id="role-other" name="role" value="AutrePersonelTE" formControlName="role">
+        <label for="role-other"><h2>Autre Personnel TE</h2></label>
+    </div></div>
 }
-   
-    <tr>
-        <td><input type="radio" id="role" name="role" value="PersonelExtern" formControlName="role" (change)="verifierTE()"></td>
-        <td><label><h2>Personnel Externe</h2></label></td>
-    </tr>
+    
+    <div class="radio-row">
+        <input type="radio" id="role-extern" name="role" value="PersonelExtern" formControlName="role" (change)="verifierTE()">
+        <label for="role-extern"><h2>Personnel Externe</h2></label>
+    </div>
 
      <button type="submit" class="next">
       <span class="circle" aria-hidden="true">
@@ -38,8 +37,5 @@
       <span class="button-text">Next</span>
       </button>
 </form>
-
-
-
 
 </div>

@@ -4,22 +4,23 @@ import { AuthService } from './service/auth.service';
 import { map } from 'rxjs';
 
 export const engagementImpGuard: CanActivateFn = (route, state) => {
-  const authserv = inject(AuthService)
-  const router = inject(Router)
-  let etat:Boolean = false
-  
-     
+  const authserv = inject(AuthService);
+  const router = inject(Router);
+   
   return authserv.checkrole().pipe(
     map((data: any) => {
-      const userRole = data?.authorities?.[0]?.authority;
+      console.log('Guard data:', data);
+
+      const userRole = data.authorities?.[0]?.authority;
+
+      console.log('Role:', userRole);
 
       if (userRole === 'LABO') {
-        return true; 
-      } else {
-        router.navigate(['/']);
-        return false; 
+        return true;
       }
-    }))
- 
-  
+
+      router.navigate(['/']);
+      return false;
+    })
+  );
 };

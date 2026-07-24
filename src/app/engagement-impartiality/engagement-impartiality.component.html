@@ -1,5 +1,18 @@
 <form [formGroup]="form">
 
+    @if (errorMessage()) {
+        <div class="error-banner">
+            <span class="error-icon"></span>
+            {{ errorMessage() }}
+        </div>
+    }
+
+    @if (successMessage()) {
+        <div class="success-banner">
+            <span class="success-icon"></span>
+            {{ successMessage() }}
+        </div>
+    }
 
 <div id="pdfContent" class="page">
 
@@ -383,9 +396,14 @@
 
     <button
         type="button"
-        (click)="generatePdf()">
+        (click)="generatePdf()"
+        [disabled]="isLoading()">
 
-     Confirmer l envoi
+        @if (isLoading()) {
+            <span class="spinner"></span> Envoi en cours...
+        } @else {
+            Confirmer l'envoi
+        }
 
     </button>
 

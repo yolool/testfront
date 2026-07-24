@@ -4,6 +4,20 @@
         <div class="h1"><h1>Signez le document ci-dessous</h1></div>
     }
 
+    @if (errorMessage()) {
+        <div class="error-banner">
+            <span class="error-icon">⚠</span>
+            {{ errorMessage() }}
+        </div>
+    }
+
+    @if (successMessage()) {
+        <div class="success-banner">
+            <span class="success-icon">✓</span>
+            {{ successMessage() }}
+        </div>
+    }
+
 <div id="pdfContent" class="page">
 
 
@@ -182,8 +196,12 @@
     @if(showbtn){
     <div class="buttons">
 
-    <button (click)="generatePdf()">
-    Confirmer l envoi
+    <button (click)="generatePdf()" [disabled]="isLoading()">
+        @if (isLoading()) {
+            <span class="spinner"></span> Envoi en cours...
+        } @else {
+            Confirmer l'envoi
+        }
     </button>
 
     </div>}

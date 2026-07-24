@@ -1,26 +1,18 @@
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-.app-main{
+.app-main {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-
-
-
-
+  width: 100%;
 }
-  main {
+
+main {
   flex: 1;
   background-color: #EDEDEE;
-  margin-left: -8px;
-  margin-right: -8px;
-  
 }
-.footer{
-    margin-left: -8px;
-    margin-right: -8px;
-    margin-bottom: -8px;
+
+/* Responsive spacing */
+@media (min-width: 1200px) {
+  main {
+    max-width: 100%;
+  }
 }
