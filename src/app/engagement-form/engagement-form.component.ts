@@ -22,6 +22,7 @@ signaturePad!: SignaturePad;
  date:Date = new Date
  signture=false
 
+
  ngOnInit(){
   this.type = sessionStorage.getItem('type')
   console.log(this.type)
@@ -53,6 +54,7 @@ signaturePad!: SignaturePad;
     
   }
  
+  
     
   verfiecheck(){
         if(this.form.get('check')?.value === true){
@@ -64,16 +66,14 @@ signaturePad!: SignaturePad;
 
  async generatePdf(): Promise<void> {
    
-   if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      
-      return;
+   if (this.signaturePad.isEmpty() || this.form.invalid) {
+       this.signture = true;
+       this.form.markAllAsTouched();
+      return ;
     }
+  
 
-    if (this.signaturePad.isEmpty()) {
-      this.signture = true;
-      return;
-    }
+   
    
   
 
@@ -97,15 +97,21 @@ signaturePad!: SignaturePad;
       const pdfFile = new File([pdfBlob], 'Engagement.pdf', { type: 'application/pdf' });
       
       const subject = `Engagement de confidentialité - ${this.form.value.name}`;
-      
+      let id = ''
+      if(this.type !== 'guest'){
+         id = this.form.get('teid')?.value
+      }
 
-      this.engagementServ.uploadEngagement(pdfFile, subject  ).subscribe({
+      this.engagementServ.uploadEngagement(pdfFile, subject, id  ).subscribe({
         next: (response) => {
           if(this.type === 'guest'){
           this.router.navigate(['/']);
-          sessionStorage.setItem('msg' , response.statut)}
+          sessionStorage.setItem('msg' , response.statut)
+          }else{
+            this.router.navigate(['/Dashboard'])
+          }
         }
-        // the other  
+          
         
         ,
         error: (err) => {

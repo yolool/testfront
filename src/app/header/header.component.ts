@@ -9,19 +9,18 @@ import { Router } from '@angular/router';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent {
+export class HeaderComponent  {
   route = inject(Router)
-  
-  login = false
-  constructor(private authserv:AuthService){
+  authserv = inject(AuthService)
+  login = this.authserv.isAuthenticated;
 
+constructor(){
   }
-  
-   ngOnInit(){
-    this.authserv.checkSession().subscribe(
-     { next: (data)=>this.login = data }
-    )
-  }
+
+  ngOnInit(){
+    
+
+   } 
   
 
       Logout(){
@@ -31,7 +30,7 @@ export class HeaderComponent {
                console.log(err)
         }
        })
-        this.route.navigate(['/'])
+       
      }
 
   

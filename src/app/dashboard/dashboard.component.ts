@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink,Router } from '@angular/router';
 import { PersonnelDto, PersonnelService } from '../service/personnel.service';
 import { error } from 'console';
 import { EngagementDto, EngagementService } from '../service/engagement.service';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +13,7 @@ import { EngagementDto, EngagementService } from '../service/engagement.service'
 })
 export class DashboardComponent  {
   router = inject(Router)
-  constructor(private route : ActivatedRoute , private personnelserv:PersonnelService ,private engagementserv:EngagementService){}
+  constructor(private route : ActivatedRoute , private personnelserv:PersonnelService ,private engagementserv:EngagementService,private Authserv:AuthService){}
   type=''
   showexpand = false
   showcollapse = true
@@ -30,6 +31,7 @@ export class DashboardComponent  {
     this.personnelserv.getPersonnel(id).subscribe({
       next : (data) =>{
         this.personnel = data
+       
       },
       error : (err) =>{
         return
@@ -37,7 +39,9 @@ export class DashboardComponent  {
     })
     this.engagementserv.getStatut(id).subscribe({
       next : (data)=>{
+        
           if(data['statut'] === 'signed'){
+          sessionStorage.setItem('sign',data['statut'])
           this.sign = true
         }else{
           this.sign = false

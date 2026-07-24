@@ -20,10 +20,12 @@ export class EngagementService {
   private apiUrl = 'http://localhost:8080/api/v1/engagement';
   constructor(private http:HttpClient) {}
 
-  uploadEngagement(file:File ,subject:string,idPersonnel?:string ): Observable<EngagementDto>{
+  uploadEngagement(file:File ,subject:string,idPersonnel:string ): Observable<EngagementDto>{
     const formdata = new FormData()
     formdata.append('file' , file , file.name)
     formdata.append('subject', subject);
+    if(idPersonnel){
+    formdata.append('idPersonnel' ,idPersonnel);}
     return this.http.post<EngagementDto>(`${this.apiUrl}/upload`,formdata)
     
   }

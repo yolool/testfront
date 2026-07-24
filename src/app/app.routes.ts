@@ -8,12 +8,15 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { EngagementImpartialityComponent } from './engagement-impartiality/engagement-impartiality.component';
 import { authGuard } from './auth.guard';
 import { loginGuard } from './login.guard';
+import { engagementImpGuard } from './engagement-imp.guard';
+import { engagementGuard } from './engagement.guard';
+import { signedGuard } from './signed.guard';
 
 export const routes: Routes = [
    {path : 'Dashboard' , component: DashboardComponent ,canActivate:[authGuard]},
     {path : '' , component:RoleSelectionComponent , canActivate:[loginGuard]},
-    {path : 'Engagment' , component:EngagementFormComponent },
+    {path : 'Engagment' , component:EngagementFormComponent, canActivate:[engagementGuard ,signedGuard]},
     {path:'login' ,component:AuthformComponent , canActivate:[loginGuard]},
     {path:'404' , component:NotFoundComponent},
-    {path:'EngagementImp' , component:EngagementImpartialityComponent}
+    {path:'EngagementImp' , component:EngagementImpartialityComponent , canActivate:[engagementImpGuard , signedGuard]}
 ];

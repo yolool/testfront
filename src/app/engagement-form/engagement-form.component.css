@@ -246,6 +246,7 @@ select{
 }
 
 .error {
+  vertical-align:super;
   color: red;
   font-size: smaller;
 }

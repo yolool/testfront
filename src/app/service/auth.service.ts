@@ -1,7 +1,8 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal , inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap,of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 export interface LoginDTO {
   idPersonnel: string;
@@ -12,6 +13,7 @@ export interface LoginDTO {
   providedIn: 'root'
 })
 export class AuthService {
+  route = inject(Router)
   private apiUrl = 'http://localhost:8080/api/v1/auth';
   
   isAuthenticated = signal<boolean>(false);
@@ -30,6 +32,7 @@ export class AuthService {
     return this.http.post(`http://localhost:8080/logout`, {}).pipe(
       tap(() => {
         this.isAuthenticated.set(false);
+         this.route.navigate(['/'])
       })
     );
   }
@@ -48,4 +51,10 @@ export class AuthService {
     })
   );
 }
+checkrole(){
+  return this.http.get( `${this.apiUrl}/me`,{
+    withCredentials:true
+  })
+}
+
 }
