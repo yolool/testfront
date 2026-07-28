@@ -2,18 +2,18 @@
 
     @if (errorMessage()) {
         <div class="error-banner">
-            <span class="error-icon"></span>
+            <span class="error-icon">⚠</span>
             {{ errorMessage() }}
         </div>
     }
 
     @if (successMessage()) {
         <div class="success-banner">
-            <span class="success-icon"></span>
+            <span class="success-icon">✓</span>
             {{ successMessage() }}
         </div>
     }
-<div class="page-container">
+
 <div id="pdfContent" class="page">
 
 
@@ -388,7 +388,7 @@
     </div>
 
 </div>
-</div>
+
 </form>
 
 @if(showbtn){

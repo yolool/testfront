@@ -17,3 +17,81 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* =============================================
+   PDF CAPTURE MODE — Forces fixed A4 dimensions
+   on all .page elements when document.body has
+   the 'pdf-capture-mode' class.
+   These !important rules override responsive
+   CSS so the captured PDF looks identical
+   on phone, tablet, and PC.
+   ============================================= */
+body.pdf-capture-mode .page {
+  width: 210mm !important;
+  max-width: 210mm !important;
+  min-height: 297mm !important;
+  padding: 10mm !important;
+  font-size: 14px !important;
+  line-height: 2 !important;
+}
+
+body.pdf-capture-mode .page .logo-cell img {
+  width: 75px !important;
+  height: auto !important;
+  max-width: none !important;
+}
+
+body.pdf-capture-mode .page input,
+body.pdf-capture-mode .page select {
+  font-size: 14px !important;
+  min-width: 160px !important;
+  border: none !important;
+  border-bottom: 1px dotted #555 !important;
+  background: transparent !important;
+  padding: 0 4px 1px 4px !important;
+  height: auto !important;
+  line-height: normal !important;
+  vertical-align: baseline !important;
+}
+
+body.pdf-capture-mode .page td {
+  font-size: 12px !important;
+  padding: 6px !important;
+}
+
+body.pdf-capture-mode .page .content input {
+  min-width: 160px !important;
+  font-size: 14px !important;
+}
+
+body.pdf-capture-mode .page .footer-row input {
+  min-width: 130px !important;
+  font-size: 14px !important;
+}
+
+body.pdf-capture-mode .page .title {
+  font-size: 17px !important;
+}
+
+body.pdf-capture-mode .page .h1 h1 {
+  font-size: 1.4rem !important;
+}
+
+body.pdf-capture-mode .page .document-body {
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+body.pdf-capture-mode .page .date-section input {
+  width: 150px !important;
+  font-size: 13px !important;
+}
+
+body.pdf-capture-mode .page .signature p {
+  font-size: 14px !important;
+}
+
+body.pdf-capture-mode .page .signature-pad {
+  width: 400px !important;
+  height: 150px !important;
+}

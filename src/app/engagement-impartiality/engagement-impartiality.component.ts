@@ -47,11 +47,31 @@ export class EngagementImpartialityComponent {
   }
 
   private getErrorMessage(err: HttpErrorResponse): string {
-    return 'ID personnel not found';
+    if (err.error && typeof err.error === 'object') {
+      if (err.error.message) return err.error.message;
+      if (err.error.error) return err.error.error;
+    }
+    if (err.error && typeof err.error === 'string') {
+      try {
+        const parsed = JSON.parse(err.error);
+        if (parsed.message) return parsed.message;
+        if (parsed.error) return parsed.error;
+      } catch {}
+      return err.error;
+    }
+    switch (err.status) {
+      case 400: return 'Invalid form data. Please check all fields.';
+      case 401: return 'Session expired. Please login again.';
+      case 403: return 'Access denied. You do not have permission.';
+      case 404: return 'Resource not found.';
+      case 409: return 'This document has already been submitted.';
+      case 413: return 'File too large. Please try again.';
+      case 500: return 'Server error. Please try again later.';
+      default: return 'An unexpected error occurred. Please try again.';
+    }
   }
 
 async generatePdf(): Promise<void> {
-  this.form.get('check')?.disable()
   this.errorMessage.set(null);
   this.successMessage.set(null);
 
@@ -63,14 +83,17 @@ async generatePdf(): Promise<void> {
 
   this.isLoading.set(true);
 
-  
-
   const buttons = document.querySelectorAll('.no-print');
   buttons.forEach(btn => {
     (btn as HTMLElement).style.display = 'none';
   });
 
   try {
+    await new Promise(resolve => setTimeout(resolve, 200));
+
+    // Add capture-mode class to body to force fixed A4 dimensions
+    document.body.classList.add('pdf-capture-mode');
+
     const pages = document.querySelectorAll('.page');
     const pdf = new jsPDF('p', 'mm', 'a4');
 
@@ -97,6 +120,9 @@ async generatePdf(): Promise<void> {
       pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, finalHeight);
     }
 
+    // Remove the class after capture
+    document.body.classList.remove('pdf-capture-mode');
+
     const blob = pdf.output('blob');
     const pdfFile = new File([blob], 'Engagement.pdf', { type: 'application/pdf' });
 
@@ -105,7 +131,6 @@ async generatePdf(): Promise<void> {
 
     this.engagementServ.uploadEngagement(pdfFile, subject, idte).subscribe({
       next: () => {
-        
         this.isLoading.set(false);
         this.successMessage.set('Document submitted successfully!');
         setTimeout(() => {
@@ -113,7 +138,6 @@ async generatePdf(): Promise<void> {
         }, 1500);
       },
       error: (err: HttpErrorResponse) => {
-           this.form.get('check')?.enable()
         this.isLoading.set(false);
         this.errorMessage.set(this.getErrorMessage(err));
       }
@@ -122,6 +146,7 @@ async generatePdf(): Promise<void> {
   } catch(error) {
     this.isLoading.set(false);
     this.errorMessage.set('Failed to generate PDF. Please try again.');
+    document.body.classList.remove('pdf-capture-mode');
   } finally {
     buttons.forEach(btn => {
       (btn as HTMLElement).style.display = 'block';

@@ -63,11 +63,31 @@ signaturePad!: SignaturePad;
   }
 
   private getErrorMessage(err: HttpErrorResponse): string {
-    return 'ID personnel not found';
+    if (err.error && typeof err.error === 'object') {
+      if (err.error.message) return err.error.message;
+      if (err.error.error) return err.error.error;
+    }
+    if (err.error && typeof err.error === 'string') {
+      try {
+        const parsed = JSON.parse(err.error);
+        if (parsed.message) return parsed.message;
+        if (parsed.error) return parsed.error;
+      } catch {}
+      return err.error;
+    }
+    switch (err.status) {
+      case 400: return 'Invalid form data. Please check all fields.';
+      case 401: return 'Session expired. Please login again.';
+      case 403: return 'Access denied. You do not have permission.';
+      case 404: return 'Resource not found.';
+      case 409: return 'This document has already been submitted.';
+      case 413: return 'File too large. Please try again.';
+      case 500: return 'Server error. Please try again later.';
+      default: return 'An unexpected error occurred. Please try again.';
+    }
   }
 
  async generatePdf(): Promise<void> {
-   this.form.get('check')?.disable()
    this.errorMessage.set(null);
    this.successMessage.set(null);
    
@@ -80,7 +100,9 @@ signaturePad!: SignaturePad;
     this.isLoading.set(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      document.body.classList.add('pdf-capture-mode');
 
       const content = document.getElementById('pdfContent');
       if (!content) return;
@@ -90,6 +112,8 @@ signaturePad!: SignaturePad;
         useCORS: true,
         logging: false
       });
+
+      document.body.classList.remove('pdf-capture-mode');
 
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgData = canvas.toDataURL('image/png');
@@ -118,7 +142,6 @@ signaturePad!: SignaturePad;
           }, 1500);
         },
         error: (err: HttpErrorResponse) => {
-          this.form.get('check')?.enable()
           this.isLoading.set(false);
           this.errorMessage.set(this.getErrorMessage(err));
         }
@@ -127,6 +150,7 @@ signaturePad!: SignaturePad;
     } catch (error) {
       this.isLoading.set(false);
       this.errorMessage.set('Failed to generate PDF. Please try again.');
+      document.body.classList.remove('pdf-capture-mode');
     }
   }
 

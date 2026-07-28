@@ -1,3 +1,4 @@
+<html>
 <form [formGroup]="form" >
 
     @if (this.type === 'guest') {
@@ -17,15 +18,15 @@
             {{ successMessage() }}
         </div>
     }
-<div class="page-container">
-<div id="pdfContent" class="page ">
+
+<div id="pdfContent" class="page">
 
 
     <table class="header-table">
 
         <tr>
             <td class="logo-cell" rowspan="2">
-                <img width="50px" height="50px" src="../../assets/img/image.png" alt="">
+                <img src="../../assets/img/image.png" alt="">
             </td>
 
             <td class="doc-number">
@@ -190,7 +191,6 @@
     </div>
 
 </div>
-</div>
 
 </form>
 
@@ -206,3 +206,4 @@
     </button>
 
     </div>}
+</html>
