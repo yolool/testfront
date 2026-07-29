@@ -3,66 +3,63 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import SignaturePad from 'signature_pad';
-import {  Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { EngagementService } from '../service/engagement.service';
 import { HttpErrorResponse } from '@angular/common/http';
+
 @Component({
   selector: 'app-engagement-form',
-  imports: [ReactiveFormsModule ],
+  imports: [ReactiveFormsModule],
   templateUrl: './engagement-form.component.html',
   styleUrl: './engagement-form.component.css'
 })
 export class EngagementFormComponent {
-@ViewChild('signatureCanvas')
-  canvas!: ElementRef<HTMLCanvasElement>;
-  type : any
-  router = inject(Router)
-signaturePad!: SignaturePad;
- showbtn=false
- form: FormGroup;
- date:Date = new Date
- signture=false
- errorMessage = signal<string | null>(null);
- isLoading = signal<boolean>(false);
- successMessage = signal<string | null>(null);
-
-
- ngOnInit(){
-  this.type = sessionStorage.getItem('type')
- 
-   if(this.type !== 'guest'){
-       this.form.get('teid')?.setValidators([Validators.required])
-      this.form.get('teid')?.updateValueAndValidity()
-      
-   }   
-
- }
-
-  constructor(private fb: FormBuilder , private engagementServ:EngagementService){
-    
-    this.form = this.fb.group({
-      check:[false],
-      name:['',Validators.required],
-      role:['',Validators.required],
-      company:['',Validators.required],
-      teid:[''],
-      city:['',Validators.required],
-      date:[{value: this.date.getDate() + '/' + '0'+(this.date.getMonth()+1) + '/' + this.date.getFullYear(),disabled:true}]
-
-    });
+  @ViewChild('signatureCanvas') canvas!: ElementRef<HTMLCanvasElement>;
   
+  type: any;
+  router = inject(Router);
+  signaturePad!: SignaturePad;
+  showbtn = false;
+  form: FormGroup;
+  date: Date = new Date();
+  signture = false;
+  
+  isCapturing = false;
+
+  errorMessage = signal<string | null>(null);
+  isLoading = signal<boolean>(false);
+  successMessage = signal<string | null>(null);
+
+  ngOnInit() {
+    this.type = sessionStorage.getItem('type');
+ 
+    if (this.type !== 'guest') {
+      this.form.get('teid')?.setValidators([Validators.required]);
+      this.form.get('teid')?.updateValueAndValidity();
+    }   
+  }
+
+  constructor(private fb: FormBuilder, private engagementServ: EngagementService) {
+    this.form = this.fb.group({
+      check: [false],
+      name: ['', Validators.required],
+      role: ['', Validators.required],
+      company: ['', Validators.required],
+      teid: [''],
+      city: ['', Validators.required],
+      date: [{ value: this.date.getDate() + '/' + '0' + (this.date.getMonth() + 1) + '/' + this.date.getFullYear(), disabled: true }]
+    });
   }
   
-    
-  verfiecheck(){
-        if(this.form.get('check')?.value === true){
-        this.showbtn=true
-         }else if(this.form.get('check')?.value === false){
-      this.showbtn=false
+  verfiecheck() {
+    if (this.form.get('check')?.value === true) {
+      this.showbtn = true;
+    } else if (this.form.get('check')?.value === false) {
+      this.showbtn = false;
     }
   }
 
-  private getErrorMessage(err: HttpErrorResponse): string {
+ private getErrorMessage(err: HttpErrorResponse): string {
     if (err.error && typeof err.error === 'object') {
       if (err.error.message) return err.error.message;
       if (err.error.error) return err.error.error;
@@ -87,25 +84,43 @@ signaturePad!: SignaturePad;
     }
   }
 
- async generatePdf(): Promise<void> {
-   this.errorMessage.set(null);
-   this.successMessage.set(null);
-   
-   if (this.signaturePad.isEmpty() || this.form.invalid) {
-       this.signture = true;
-       this.form.markAllAsTouched();
-      return ;
+  async generatePdf(): Promise<void> {
+    this.errorMessage.set(null);
+    window.scrollTo(0,0)
+    this.successMessage.set(null);     
+    if (this.signaturePad.isEmpty() || this.form.invalid) {
+      this.signture = true;
+      this.form.markAllAsTouched();
+      return;
+    }else if(!this.signaturePad.isEmpty() || this.form.valid ){
+      this.signture = false
     }
 
+   
     this.isLoading.set(true);
 
+    const buttons = document.querySelectorAll('.no-print');
+    buttons.forEach(btn => {
+      (btn as HTMLElement).style.display = 'none';
+    });
+
     try {
-      await new Promise(resolve => setTimeout(resolve, 200));
+      this.isCapturing = true;
+      this.form.get('check')?.disable()
+        this.signaturePad.off()
+      await new Promise(resolve => setTimeout(resolve, 50));
 
       document.body.classList.add('pdf-capture-mode');
 
       const content = document.getElementById('pdfContent');
-      if (!content) return;
+      if (!content) {
+        this.isCapturing = false;
+        this.isLoading.set(false);
+        buttons.forEach(btn => {
+          (btn as HTMLElement).style.display = 'block';
+        });
+        return;
+      }
 
       const canvas = await html2canvas(content, {
         scale: 2,
@@ -115,6 +130,13 @@ signaturePad!: SignaturePad;
 
       document.body.classList.remove('pdf-capture-mode');
 
+      this.isCapturing = false;
+
+
+      buttons.forEach(btn => {
+        (btn as HTMLElement).style.display = 'block';
+      });
+
       const pdf = new jsPDF('p', 'mm', 'a4');
       const imgData = canvas.toDataURL('image/png');
       pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
@@ -123,38 +145,46 @@ signaturePad!: SignaturePad;
       const pdfFile = new File([pdfBlob], 'Engagement.pdf', { type: 'application/pdf' });
       
       const subject = `Engagement de confidentialité - ${this.form.value.name}`;
-      let id = ''
-      if(this.type !== 'guest'){
-         id = this.form.get('teid')?.value
+      let id = '';
+      if (this.type !== 'guest') {
+        id = this.form.get('teid')?.value;
       }
-
+        
       this.engagementServ.uploadEngagement(pdfFile, subject, id).subscribe({
         next: (response) => {
+          
           this.isLoading.set(false);
           this.successMessage.set('Document submitted successfully!');
           setTimeout(() => {
-            if(this.type === 'guest'){
+            if (this.type === 'guest') {
               this.router.navigate(['/']);
-              sessionStorage.setItem('msg' , response.statut)
-            }else{
-              this.router.navigate(['/Dashboard'])
+              sessionStorage.setItem('msg', response.statut);
+            } else {
+              this.router.navigate(['/Dashboard']);
             }
           }, 1500);
         },
         error: (err: HttpErrorResponse) => {
+          this.form.get('check')?.enable()
+          this.signaturePad.on()
           this.isLoading.set(false);
           this.errorMessage.set(this.getErrorMessage(err));
         }
       });
 
     } catch (error) {
+      this.isCapturing = false;
       this.isLoading.set(false);
       this.errorMessage.set('Failed to generate PDF. Please try again.');
       document.body.classList.remove('pdf-capture-mode');
+      buttons.forEach(btn => {
+        (btn as HTMLElement).style.display = 'block';
+      });
+      
     }
   }
 
- ngAfterViewInit() {
+  ngAfterViewInit() {
     setTimeout(() => {
       const canvas = this.canvas.nativeElement;
       canvas.width = canvas.offsetWidth;
@@ -163,7 +193,7 @@ signaturePad!: SignaturePad;
     }, 100);
   }
 
-clearSignature() {
-  this.signaturePad.clear();
-}
+  clearSignature() {
+    this.signaturePad.clear();
+  }
 }

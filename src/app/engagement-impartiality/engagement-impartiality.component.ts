@@ -28,6 +28,9 @@ export class EngagementImpartialityComponent {
   isLoading = signal<boolean>(false);
   successMessage = signal<string | null>(null);
 
+  // Controls template rendering for html2canvas
+  isCapturing = false;
+
   constructor(private fb: FormBuilder, private engagementServ:EngagementService) {
   
     this.form = this.fb.group({
@@ -74,12 +77,15 @@ export class EngagementImpartialityComponent {
 async generatePdf(): Promise<void> {
   this.errorMessage.set(null);
   this.successMessage.set(null);
-
+     this.form.get('check')?.disable()
+     this.signaturePad.off()
   if (this.signaturePad.isEmpty() || this.form.invalid) {
     this.signture = true;
     this.form.markAllAsTouched();
     return;
-  }
+  }else if(!this.signaturePad.isEmpty() || this.form.valid ){
+      this.signture = false
+    } 
 
   this.isLoading.set(true);
 
@@ -89,9 +95,10 @@ async generatePdf(): Promise<void> {
   });
 
   try {
-    await new Promise(resolve => setTimeout(resolve, 200));
+    this.isCapturing = true;
 
-    // Add capture-mode class to body to force fixed A4 dimensions
+    await new Promise(resolve => setTimeout(resolve, 50));
+
     document.body.classList.add('pdf-capture-mode');
 
     const pages = document.querySelectorAll('.page');
@@ -120,8 +127,13 @@ async generatePdf(): Promise<void> {
       pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, finalHeight);
     }
 
-    // Remove the class after capture
     document.body.classList.remove('pdf-capture-mode');
+
+    this.isCapturing = false;
+
+    buttons.forEach(btn => {
+      (btn as HTMLElement).style.display = 'block';
+    });
 
     const blob = pdf.output('blob');
     const pdfFile = new File([blob], 'Engagement.pdf', { type: 'application/pdf' });
@@ -138,15 +150,21 @@ async generatePdf(): Promise<void> {
         }, 1500);
       },
       error: (err: HttpErrorResponse) => {
+        this.form.get('check')?.enable()
+     this.signaturePad.on()
         this.isLoading.set(false);
         this.errorMessage.set(this.getErrorMessage(err));
       }
     });
 
   } catch(error) {
+    this.isCapturing = false;
     this.isLoading.set(false);
     this.errorMessage.set('Failed to generate PDF. Please try again.');
     document.body.classList.remove('pdf-capture-mode');
+    buttons.forEach(btn => {
+      (btn as HTMLElement).style.display = 'block';
+    });
   } finally {
     buttons.forEach(btn => {
       (btn as HTMLElement).style.display = 'block';

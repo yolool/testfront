@@ -84,20 +84,28 @@
 
             Je soussigné(e),
 
+            @if (!isCapturing) {
             <input
                 type="text"
                 formControlName="name">
             @if(form.get('name')?.invalid && form.get('name')?.touched){
             <small class="error">*champ obligatoire.</small>}
+            } @else {
+            <span class="pdf-value">{{ form.get('name')?.value }}</span>
+            }
             <span>employé(e) au sein de la société TE Connectivity
             muni </span>de TE ID :
             
 
+            @if (!isCapturing) {
             <input
                 type="text"
                 formControlName="teid">
-                 @if(form.get('teid')?.invalid && form.get('teid')?.touched){
+             @if(form.get('teid')?.invalid && form.get('teid')?.touched){
             <small class="error">*champ obligatoire.</small>}
+            } @else {
+            <span class="pdf-value">{{ form.get('teid')?.value }}</span>
+            }
 
             <span>reconnais l'importance de l'impartialité et de la confidentialité
             dans les activités du laboratoire</span> et je m'engage à respecter
@@ -345,9 +353,13 @@
 
             </label>
 
+            @if (!isCapturing) {
             <input
                 type="text"
                 formControlName="date">
+            } @else {
+            <span class="pdf-value">{{ form.get('date')?.value }}</span>
+            }
 
         </div>
 

@@ -5,20 +5,37 @@ form {
   margin: 0 auto;
 }
 
-/* Class added temporarily during PDF capture to force fixed A4 dimensions */
 body.pdf-capture-mode .page {
   width: 210mm !important;
   max-width: 210mm !important;
   min-height: 297mm !important;
   padding: 10mm !important;
   font-size: 14px !important;
-  line-height: 2 !important;
+  line-height: 1.5 !important;
+}
+
+body.pdf-capture-mode .page .logo-cell img {
+  width: 75px !important;
+  height: auto !important;
+  max-width: none !important;
 }
 
 body.pdf-capture-mode .page input,
 body.pdf-capture-mode .page select {
   font-size: 14px !important;
   min-width: 160px !important;
+  border: none !important;
+  border-bottom: 1px dotted #555 !important;
+  background: transparent !important;
+  padding: 2px 4px 8px 4px !important;
+  line-height: 1.2 !important;
+  display: inline-block !important;
+  min-height: 1.4em !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 1 !important;
+  box-sizing: border-box !important;
+  vertical-align: baseline !important;
 }
 
 body.pdf-capture-mode .page td {
@@ -26,42 +43,68 @@ body.pdf-capture-mode .page td {
   padding: 6px !important;
 }
 
-body.pdf-capture-mode .page .logo-cell img {
-  width: 75px !important;
-}
-
-body.pdf-capture-mode .page .signature-pad {
-  width: 400px !important;
-  height: 150px !important;
-}
-
-body.pdf-capture-mode .page .content {
-  font-size: 14px !important;
-  line-height: 2 !important;
-  margin-top: 32px !important;
-}
-
 body.pdf-capture-mode .page .content input {
   min-width: 160px !important;
   font-size: 14px !important;
+  padding: 2px 4px 8px 4px !important;
+  line-height: 1.2 !important;
+  display: inline-block !important;
+  min-height: 1.4em !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 1 !important;
+  box-sizing: border-box !important;
+  vertical-align: baseline !important;
 }
 
 body.pdf-capture-mode .page .footer-row input {
   min-width: 130px !important;
   font-size: 14px !important;
+  padding: 2px 4px 8px 4px !important;
+  line-height: 1.2 !important;
+  display: inline-block !important;
+  min-height: 1.4em !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 1 !important;
+  box-sizing: border-box !important;
+  vertical-align: baseline !important;
 }
 
 body.pdf-capture-mode .page .title {
   font-size: 17px !important;
 }
 
-body.pdf-capture-mode .page .header-table td {
-  font-size: 12px !important;
-  padding: 6px !important;
-}
-
 body.pdf-capture-mode .page .h1 h1 {
   font-size: 1.4rem !important;
+}
+
+body.pdf-capture-mode .page .document-body {
+  font-size: 13px !important;
+  line-height: 1.6 !important;
+}
+
+body.pdf-capture-mode .page .date-section input {
+  width: 150px !important;
+  font-size: 13px !important;
+  padding: 2px 4px 8px 4px !important;
+  line-height: 1.2 !important;
+  display: inline-block !important;
+  min-height: 1.4em !important;
+  overflow: hidden !important;
+  position: relative !important;
+  z-index: 1 !important;
+  box-sizing: border-box !important;
+  vertical-align: baseline !important;
+}
+
+body.pdf-capture-mode .page .signature p {
+  font-size: 14px !important;
+}
+
+body.pdf-capture-mode .page .signature-pad {
+  width: 400px !important;
+  height: 150px !important;
 }
 
 .page {
@@ -138,6 +181,8 @@ body.pdf-capture-mode .page .h1 h1 {
 
 .content p {
   margin-bottom: 20px;
+  
+ 
 }
 
 .content input {
@@ -147,13 +192,30 @@ body.pdf-capture-mode .page .h1 h1 {
   font-size: 14px;
   min-width: 160px;
   max-width: 100%;
-  padding: 2px 4px;
+  padding: 0 4px 2px 4px;
+  vertical-align: baseline;
+  box-sizing: border-box;
   transition: border-color 0.2s ease;
 }
 
 .content input:focus {
   outline: none;
   border-bottom: 1px solid #0066A1;
+}
+
+.pdf-value {
+  display: inline-block;
+  border-bottom: 1px dotted #555;
+  min-width: 160px;
+  padding: 0 6px 2px 6px;
+  font-weight: 500;
+  color: #000;
+  vertical-align: baseline;
+  box-sizing: border-box;
+}
+
+.footer-row .pdf-value {
+  min-width: 120px;
 }
 
 .footer {
@@ -165,7 +227,7 @@ body.pdf-capture-mode .page .h1 h1 {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  align-items: center;
+  align-items: baseline;
   gap: 6px;
 }
 
@@ -176,7 +238,8 @@ body.pdf-capture-mode .page .h1 h1 {
   font-size: 14px;
   min-width: 130px;
   max-width: 100%;
-  padding: 2px 4px;
+  padding: 0 4px 2px 4px;
+  vertical-align: baseline;
   transition: border-color 0.2s ease;
 }
 
@@ -320,7 +383,6 @@ button:active {
   flex-shrink: 0;
 }
 
-/* Success Banner */
 .success-banner {
   background: #f0fdf4;
   border: 1px solid #bbf7d0;
@@ -342,7 +404,6 @@ button:active {
   flex-shrink: 0;
 }
 
-/* Spinner */
 .spinner {
   display: inline-block;
   width: 16px;
@@ -394,14 +455,14 @@ button:active {
   }
 
   .content {
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.8;
     margin-top: 24px;
   }
 
   .content input {
     min-width: 100px;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .signature-pad {
@@ -436,14 +497,14 @@ button:active {
   }
 
   .content {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.6;
     margin-top: 20px;
   }
 
   .content input {
     min-width: 70px;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .logo-cell {
