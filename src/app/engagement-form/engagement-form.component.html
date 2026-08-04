@@ -104,7 +104,7 @@
             <span> muni(e) de TE ID </span>
 
             @if (!isCapturing) {
-                <input type="text" formControlName="teid">
+                <input type="text" style="text-transform: uppercase;"  formControlName="teid" >
                 @if(form.get('teid')?.invalid && form.get('teid')?.touched){
                     <small class="error">*champ est obligatoire.</small>
                 }

@@ -1,9 +1,10 @@
-import { Component, ViewChild, ElementRef, inject, signal } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, signal,DestroyRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import SignaturePad from 'signature_pad';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EngagementService } from '../service/engagement.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -25,12 +26,20 @@ export class EngagementFormComponent {
   signture = false;
   
   isCapturing = false;
+  destroyRef = inject(DestroyRef);
 
   errorMessage = signal<string | null>(null);
   isLoading = signal<boolean>(false);
   successMessage = signal<string | null>(null);
 
   ngOnInit() {
+    
+   this.form.get('teid')?.valueChanges.subscribe(val => {
+        if (typeof val === 'string' && val !== val.toUpperCase()) {
+          this.form.get('teid')?.setValue(val.toUpperCase());
+          
+        }
+      });
     this.type = sessionStorage.getItem('type');
  
     if (this.type !== 'guest') {
@@ -39,7 +48,7 @@ export class EngagementFormComponent {
     }   
   }
 
-  constructor(private fb: FormBuilder, private engagementServ: EngagementService) {
+  constructor(private fb: FormBuilder, private engagementServ: EngagementService ) {
     this.form = this.fb.group({
       check: [false],
       name: ['', Validators.required],
@@ -87,7 +96,12 @@ export class EngagementFormComponent {
   async generatePdf(): Promise<void> {
     this.errorMessage.set(null);
     window.scrollTo(0,0)
-    this.successMessage.set(null);     
+    this.successMessage.set(null);  
+    if(sessionStorage.getItem('id')){
+    if(sessionStorage.getItem('id')?.toUpperCase() !== this.form.get('teid')?.value){
+      this.errorMessage.set('the id is invalid')
+      return
+    }    } 
     if (this.signaturePad.isEmpty() || this.form.invalid) {
       this.signture = true;
       this.form.markAllAsTouched();

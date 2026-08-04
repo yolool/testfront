@@ -28,9 +28,16 @@ export class EngagementImpartialityComponent {
   isLoading = signal<boolean>(false);
   successMessage = signal<string | null>(null);
 
-  // Controls template rendering for html2canvas
   isCapturing = false;
 
+  ngOnInit(){
+    this.form.get('teid')?.valueChanges.subscribe(val => {
+        if (typeof val === 'string' && val !== val.toUpperCase()) {
+          this.form.get('teid')?.setValue(val.toUpperCase());
+          
+        }
+      });
+  }
   constructor(private fb: FormBuilder, private engagementServ:EngagementService) {
   
     this.form = this.fb.group({
@@ -79,6 +86,11 @@ async generatePdf(): Promise<void> {
   this.successMessage.set(null);
      this.form.get('check')?.disable()
      this.signaturePad.off()
+
+      if(sessionStorage.getItem('id')?.toUpperCase() !== this.form.get('teid')?.value){
+      this.errorMessage.set('the id is invalid')
+      return
+    }     
   if (this.signaturePad.isEmpty() || this.form.invalid) {
     this.signture = true;
     this.form.markAllAsTouched();
