@@ -87,7 +87,7 @@ async generatePdf(): Promise<void> {
      this.form.get('check')?.disable()
      this.signaturePad.off()
 
-      if(sessionStorage.getItem('id')?.toUpperCase() !== this.form.get('teid')?.value){
+      if(localStorage.getItem('id')?.toUpperCase() !== this.form.get('teid')?.value){
       this.errorMessage.set('the id is invalid')
       return
     }     

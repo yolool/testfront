@@ -8,7 +8,7 @@ export const signedGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
 
-  const userType = sessionStorage.getItem('type');
+  const userType = localStorage.getItem('type');
  
 
   if (userType === 'guest') {
@@ -16,7 +16,7 @@ export const signedGuard: CanActivateFn = (route, state) => {
   }
 
   
-  if (sessionStorage.getItem('sign') !== 'signed') {
+  if (localStorage.getItem('sign') !== 'signed') {
     return true;
   }else{
 

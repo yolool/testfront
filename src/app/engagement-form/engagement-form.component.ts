@@ -40,7 +40,7 @@ export class EngagementFormComponent {
           
         }
       });
-    this.type = sessionStorage.getItem('type');
+    this.type = localStorage.getItem('type');
  
     if (this.type !== 'guest') {
       this.form.get('teid')?.setValidators([Validators.required]);
@@ -97,8 +97,8 @@ export class EngagementFormComponent {
     this.errorMessage.set(null);
     window.scrollTo(0,0)
     this.successMessage.set(null);  
-    if(sessionStorage.getItem('id')){
-    if(sessionStorage.getItem('id')?.toUpperCase() !== this.form.get('teid')?.value){
+    if(localStorage.getItem('id')){
+    if(localStorage.getItem('id')?.toUpperCase() !== this.form.get('teid')?.value){
       this.errorMessage.set('the id is invalid')
       return
     }    } 
@@ -172,7 +172,7 @@ export class EngagementFormComponent {
           setTimeout(() => {
             if (this.type === 'guest') {
               this.router.navigate(['/']);
-              sessionStorage.setItem('msg', response.statut);
+              localStorage.setItem('msg', response.statut);
             } else {
               this.router.navigate(['/Dashboard']);
             }

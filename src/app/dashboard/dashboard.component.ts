@@ -27,7 +27,7 @@ export class DashboardComponent  {
  
 
   ngOnInit(){
-    const id =sessionStorage.getItem('id') || ''
+    const id =localStorage.getItem('id') || ''
     this.personnelserv.getPersonnel(id).subscribe({
       next : (data) =>{
         this.personnel = data
@@ -41,7 +41,7 @@ export class DashboardComponent  {
       next : (data)=>{
         
           if(data['statut'] === 'signed'){
-          sessionStorage.setItem('sign',data['statut'])
+          localStorage.setItem('sign',data['statut'])
           this.sign = true
         }else{
           this.sign = false

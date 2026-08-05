@@ -18,12 +18,12 @@ export class RoleSelectionComponent {
    })
 
    ngOnInit() {
-  this.statut = sessionStorage.getItem('msg');
-  sessionStorage.clear()
+  this.statut = localStorage.getItem('msg');
+  localStorage.clear()
     
 
   if (this.statut) {
-    sessionStorage.removeItem('msg');
+    localStorage.removeItem('msg');
 
        setTimeout(() => {
       this.statut = '';
@@ -42,15 +42,15 @@ export class RoleSelectionComponent {
       OnSubmit(){
           if (this.radioGroupe.get('role')?.value  === 'PersonelExtern'){
             this.router.navigate(['/Engagment'])
-            sessionStorage.setItem('type','guest')
+            localStorage.setItem('type','guest')
 
           }else if(this.radioGroupe.get('role')?.value  === 'PersonelLaboTE'){
                 this.router.navigate(['/login'])
-                sessionStorage.setItem('as','PersonelLaboTE')
+                localStorage.setItem('as','PersonelLaboTE')
                 
           }else if(this.radioGroupe.get('role')?.value  === 'AutrePersonelTE'){
                   this.router.navigate(['/login'])
-                  sessionStorage.setItem('as','AutrePersonelTE')
+                  localStorage.setItem('as','AutrePersonelTE')
           }
 
       }

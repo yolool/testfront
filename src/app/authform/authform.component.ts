@@ -21,7 +21,7 @@ export class AuthformComponent {
   isLoading = signal<boolean>(false);
 
   ngOnInit(){
-        this.as = sessionStorage.getItem('as') 
+        this.as = localStorage.getItem('as') 
       if(this.as=== 'AutrePersonelTE'){
             this.showdep = true
       }else if(this.as === 'PersonelLaboTE'){
@@ -69,8 +69,8 @@ export class AuthformComponent {
       next: () => {
         this.isLoading.set(false);
         this.router.navigate(['/Dashboard']);
-        sessionStorage.setItem('id',this.form.get('idPersonnel')?.value)
-        sessionStorage.setItem('logout', 'true')
+        localStorage.setItem('id',this.form.get('idPersonnel')?.value)
+        localStorage.setItem('logout', 'true')
       },
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);

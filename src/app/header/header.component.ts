@@ -24,7 +24,7 @@ constructor(){
   
 
       Logout(){
-       sessionStorage.clear()
+       localStorage.clear()
        this.authserv.logout().subscribe({
         error : (err)=>{
                console.log(err)
