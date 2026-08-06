@@ -1,9 +1,8 @@
 import { Component, inject, OnInit, } from '@angular/core';
-import { ActivatedRoute, RouterLink,Router } from '@angular/router';
+import { RouterLink,Router } from '@angular/router';
 import { PersonnelDto, PersonnelService } from '../service/personnel.service';
-import { error } from 'console';
-import { EngagementDto, EngagementService } from '../service/engagement.service';
-import { AuthService } from '../service/auth.service';
+import { EngagementService } from '../service/engagement.service';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -13,7 +12,7 @@ import { AuthService } from '../service/auth.service';
 })
 export class DashboardComponent  {
   router = inject(Router)
-  constructor(private route : ActivatedRoute , private personnelserv:PersonnelService ,private engagementserv:EngagementService,private Authserv:AuthService){}
+  constructor(private personnelserv:PersonnelService ,private engagementserv:EngagementService){}
   type=''
   showexpand = false
   showcollapse = true

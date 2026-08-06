@@ -6,7 +6,6 @@ import { map } from 'rxjs';
 export const engagementImpGuard: CanActivateFn = (route, state) => {
   const authserv = inject(AuthService)
   const router = inject(Router)
-  let etat:Boolean = false
   
      
   return authserv.checkrole().pipe(
