@@ -84,8 +84,7 @@ export class EngagementImpartialityComponent {
 async generatePdf(): Promise<void> {
   this.errorMessage.set(null);
   this.successMessage.set(null);
-     this.form.get('check')?.disable()
-     this.signaturePad.off()
+    
 
       if(localStorage.getItem('id')?.toUpperCase() !== this.form.get('teid')?.value){
       this.errorMessage.set('the id is invalid')
@@ -108,6 +107,8 @@ async generatePdf(): Promise<void> {
 
   try {
     this.isCapturing = true;
+     this.form.get('check')?.disable()
+     this.signaturePad.off()
 
     await new Promise(resolve => setTimeout(resolve, 50));
 
@@ -162,14 +163,14 @@ async generatePdf(): Promise<void> {
         }, 1500);
       },
       error: (err: HttpErrorResponse) => {
-        this.form.get('check')?.enable()
-     this.signaturePad.on()
         this.isLoading.set(false);
         this.errorMessage.set(this.getErrorMessage(err));
       }
     });
 
   } catch(error) {
+     this.form.get('check')?.enable()
+         this.signaturePad.on()
     this.isCapturing = false;
     this.isLoading.set(false);
     this.errorMessage.set('Failed to generate PDF. Please try again.');
