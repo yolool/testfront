@@ -15,7 +15,7 @@ export const engagementGuard: CanActivateFn = (route, state) => {
     map((data: any) => {
       const role = data?.authorities?.[0]?.authority;
 
-      if (role !== 'LABO') {
+      if (role !== 'ROLE_LABO') {
         return true;
       }
 

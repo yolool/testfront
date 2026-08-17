@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { AppComponent } from './app.component';
 import { RoleSelectionComponent } from './role-selection/role-selection.component';
 import { EngagementFormComponent } from './engagement-form/engagement-form.component';
 import { AuthformComponent } from './authform/authform.component';
@@ -20,5 +19,5 @@ export const routes: Routes = [
     {path:'login' ,component:AuthformComponent , canActivate:[loginGuard]},
     {path:'404' , component:NotFoundComponent},
     {path:'EngagementImp' , component:EngagementImpartialityComponent , canActivate:[engagementImpGuard , signedGuard]},
-    {path:'qr' , component:QrCodeComponent}
+    {path:'**' , redirectTo:'404'}
 ];

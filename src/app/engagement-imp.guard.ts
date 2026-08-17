@@ -12,7 +12,7 @@ export const engagementImpGuard: CanActivateFn = (route, state) => {
     map((data: any) => {
       const userRole = data?.authorities?.[0]?.authority;
 
-      if (userRole === 'LABO') {
+      if (userRole === 'ROLE_LABO') {
         return true; 
       } else {
         router.navigate(['/']);
