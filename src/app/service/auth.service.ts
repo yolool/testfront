@@ -14,7 +14,7 @@ export interface LoginDTO {
 })
 export class AuthService {
   route = inject(Router)
-  private apiUrl = 'http://localhost:8080/api/v1/auth';
+  private apiUrl = '/api/v1/auth';
   
   isAuthenticated = signal<boolean>(false);
 

@@ -88,6 +88,7 @@ async generatePdf(): Promise<void> {
 
       if(localStorage.getItem('id')?.toUpperCase() !== this.form.get('teid')?.value){
       this.errorMessage.set('the id is invalid')
+      scrollTo(0, 0);
       return
     }     
   if (this.signaturePad.isEmpty() || this.form.invalid) {
