@@ -10,5 +10,5 @@ const serverConfig: ApplicationConfig = {
     provideServerRouting(serverRoutes)
   ]
 };
-
+//wadahdahdahahwdkhakdhakiwhsjsidhbwiosnndjdijjwjwkjkjkjkjwuwhsbb
 export const config = mergeApplicationConfig(appConfig, serverConfig);

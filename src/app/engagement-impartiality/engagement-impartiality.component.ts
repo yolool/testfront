@@ -158,6 +158,9 @@ async generatePdf(): Promise<void> {
       next: () => {
         this.isLoading.set(false);
         this.successMessage.set('Document submitted successfully!');
+           if(this.successMessage !== null){
+           window.scrollTo(0, 0);
+              } 
         setTimeout(() => {
           this.router.navigate(['/Dashboard']);
         }, 1500);
@@ -165,6 +168,9 @@ async generatePdf(): Promise<void> {
       error: (err: HttpErrorResponse) => {
         this.isLoading.set(false);
         this.errorMessage.set(this.getErrorMessage(err));
+           if(this.errorMessage() !== null){
+           window.scrollTo(0, 0);
+              } 
       }
     });
 

@@ -95,8 +95,9 @@ export class EngagementFormComponent {
 
   async generatePdf(): Promise<void> {
     this.errorMessage.set(null);
-    window.scrollTo(0,0)
-    this.successMessage.set(null);  
+    this.successMessage.set(null);
+    
+   
     if(localStorage.getItem('id')){
     if(localStorage.getItem('id')?.toUpperCase() !== this.form.get('teid')?.value){
       this.errorMessage.set('the id is invalid')
@@ -169,6 +170,9 @@ export class EngagementFormComponent {
           
           this.isLoading.set(false);
           this.successMessage.set('Document submitted successfully!');
+            if(this.successMessage() !== null){
+       window.scrollTo(0, 0);
+    } 
           setTimeout(() => {
             if (this.type === 'guest') {
               this.router.navigate(['/']);
@@ -183,7 +187,10 @@ export class EngagementFormComponent {
           this.signaturePad.on()
           this.isLoading.set(false);
           this.errorMessage.set(this.getErrorMessage(err));
-        }
+            if(this.errorMessage() !== null){
+           window.scrollTo(0, 0);
+              } 
+            }
       });
 
     } catch (error) {
