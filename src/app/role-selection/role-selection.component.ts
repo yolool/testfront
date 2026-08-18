@@ -1,4 +1,3 @@
-import { NgFor } from '@angular/common';
 import { Component,inject} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {Router} from '@angular/router';
