@@ -10,7 +10,6 @@ import { loginGuard } from './login.guard';
 import { engagementImpGuard } from './engagement-imp.guard';
 import { engagementGuard } from './engagement.guard';
 import { signedGuard } from './signed.guard';
-import { QrCodeComponent } from './qr-code/qr-code.component';
 
 export const routes: Routes = [
    {path : 'Dashboard' , component: DashboardComponent ,canActivate:[authGuard]},

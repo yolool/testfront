@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, inject, signal, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';

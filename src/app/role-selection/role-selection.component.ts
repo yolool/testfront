@@ -1,6 +1,6 @@
 import { NgFor } from '@angular/common';
 import { Component,inject} from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {Router} from '@angular/router';
 @Component({
   selector: 'app-role-selection',
